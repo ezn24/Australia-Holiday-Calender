@@ -27,10 +27,11 @@ jobs:
 
       - name: Run cleaner
         run: |
-          python victoria_ics.py   # 檔名需與實際一致
-
+          python victoria_ics.py
+      
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(ics): fetch & clean Victoria ICS"
-          file_pattern: victoria.cleaned.ics  # 與輸出檔名一致
+          file_pattern: victoria.cleaned.ics
+      
