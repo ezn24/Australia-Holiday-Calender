@@ -2,12 +2,11 @@ name: Fetch & Clean Victoria ICS
 
 on:
   schedule:
-    # 每天 00:15 UTC 觸發（墨爾本一般是 UTC+10/11，等於當地上午）
-    - cron: "15 0 * * *"
+    - cron: "15 0 * * *"   # 每天 00:15 UTC
   workflow_dispatch: {}
 
 permissions:
-  contents: write  # 需要寫入 repo 才能自動 commit
+  contents: write
 
 jobs:
   fetch-clean:
@@ -28,10 +27,10 @@ jobs:
 
       - name: Run cleaner
         run: |
-          python victoria_ics.py
+          python victoria_ics.py   # 檔名需與實際一致
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(ics): fetch & clean Victoria ICS"
-          file_pattern: victoria.cleaned.ics
+          file_pattern: victoria.cleaned.ics  # 與輸出檔名一致
