@@ -7,9 +7,8 @@ from pathlib import Path
 
 SOURCE_URL = "https://www.officeholidays.com/ics/australia/victoria"
 
-# 以腳本檔所在目錄為基準，輸出到 ../dist/victoria.cleaned.ics（也可改成同層 dist）
-SCRIPT_DIR = Path(__file__).resolve().parent
-OUTPUT_DIR = (SCRIPT_DIR / "")       # 想放 repo 根目錄就改成 SCRIPT_DIR.parent / "dist"
+SCRIPT_DIR = Path(__file__).resolve().parent   # = repo 根目錄（檔案就放這）
+OUTPUT_DIR = SCRIPT_DIR                         # 直接輸出在根目錄
 OUTPUT_PATH = OUTPUT_DIR / "victoria.cleaned.ics"
 
 def main():
@@ -29,18 +28,18 @@ def main():
         if comp.name == "VEVENT":
             ev = Event()
             for k, v in comp.property_items():
-                if k.upper() != "DESCRIPTION":  # 直接略過描述
+                if k.upper() != "DESCRIPTION":  # 完全移除描述
                     ev.add(k, v)
             clean_cal.add_component(ev)
         elif comp.name not in ("VCALENDAR", "VEVENT"):
             clean_cal.add_component(comp)
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)  # 根目錄通常已存在，保險起見
     OUTPUT_PATH.write_bytes(clean_cal.to_ical())
 
-    # 立即確認
     exists = OUTPUT_PATH.exists() and OUTPUT_PATH.stat().st_size > 0
-    print(f"[ok] saved: {OUTPUT_PATH} (exists={exists}, size={OUTPUT_PATH.stat().st_size if exists else 0} bytes)")
+    size = OUTPUT_PATH.stat().st_size if exists else 0
+    print(f"[ok] saved: {OUTPUT_PATH} (exists={exists}, size={size} bytes)")
 
 if __name__ == "__main__":
     main()
