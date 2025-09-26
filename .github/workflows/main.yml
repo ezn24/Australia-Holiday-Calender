@@ -34,4 +34,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(ics): fetch & clean Victoria ICS"
-          file_pattern: dist/victoria.cleaned.ics
+          file_pattern: victoria.cleaned.ics
