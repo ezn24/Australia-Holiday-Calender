@@ -1,0 +1,37 @@
+name: Fetch & Clean Victoria ICS
+
+on:
+  schedule:
+    # 每天 00:15 UTC 觸發（墨爾本一般是 UTC+10/11，等於當地上午）
+    - cron: "15 0 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write  # 需要寫入 repo 才能自動 commit
+
+jobs:
+  fetch-clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests icalendar
+
+      - name: Run cleaner
+        run: |
+          python victoria_ics.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(ics): fetch & clean Victoria ICS"
+          file_pattern: dist/victoria.cleaned.ics
