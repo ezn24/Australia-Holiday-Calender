@@ -15,13 +15,18 @@ def main():
 
     cal = Calendar.from_ical(r.content)
 
-    # 就地移除 DESCRIPTION / X-ALT-DESC（部分來源會提供 HTML 版）
     for vevent in cal.walk("VEVENT"):
         vevent.pop("DESCRIPTION", None)
         vevent.pop("X-ALT-DESC", None)
 
-    OUT.write_bytes(cal.to_ical())
-    print(f"[ok] wrote {OUT} ({OUT.stat().st_size} bytes)")
+    new_data = cal.to_ical()
+
+    if OUT.exists() and OUT.read_bytes() == new_data:
+        print("[ok] no content changes")
+        return
+
+    OUT.write_bytes(new_data)
+    print(f"[ok] wrote {OUT} ({len(new_data)} bytes)")
 
 if __name__ == "__main__":
     main()

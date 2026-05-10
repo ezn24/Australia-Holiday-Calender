@@ -2,7 +2,7 @@ name: Fetch & Clean Victoria ICS
 
 on:
   schedule:
-    - cron: "15 0 * * *"   # 每天 00:15 UTC
+    - cron: "15 0 15 * *"
   workflow_dispatch: {}
 
 permissions:
@@ -28,6 +28,9 @@ jobs:
       - name: Run cleaner
         run: |
           python victoria_ics.py
+
+      - name: Show diff
+        run: git diff -- victoria.cleaned.ics
       
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
